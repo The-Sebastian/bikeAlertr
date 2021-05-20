@@ -24,11 +24,12 @@ const Signup = () => {
   };
 
   const createUser = () => {
-    fetch(`/user/signup`, {
+    console.log(signUpState)
+    fetch(`/api/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(signUpState),
-    }).then((response) => response.json());
+    }).then((response) => response.json()); 
     // .then(data => {
     //   console.log("signin: ", user);
       //   setUser(...user, data);

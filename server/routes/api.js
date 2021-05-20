@@ -59,7 +59,7 @@ router.post('/login',
   userController.login,
   userController.setSSIDCookie,
   (err, res, req) => {
-    res.status(200).send(res.locals);
+    res.status(200).redirect('/dashboard');
   }
 );
 
