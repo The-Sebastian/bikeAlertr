@@ -308,24 +308,6 @@ const Dashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div>
-      <h1>Dashboard</h1>
-      {/* <h3>{`Welcome ${data.firstname}`}</h3> */}
-      <h5>{`The date is ${date.toDateString()}`}</h5>
-      <h5>{`The time is ${date.toTimeString()}`}</h5>
-
-      <EasyGoogleMap setFavorites={setFavorites} favorites={favorites} />
-      
-      FAVORITES TABLE
-      <FavoritesTable setFavorites={setFavorites} favorites={favorites} /> 
-
-      STATIONS TABLE
-      <StationsTable setFavorites={setFavorites} favorites={favorites} />
-
-      ALERT COLUMN
-      <Alerts />
-=======
     <div className={classes.root}>
       <div className={classes.grow}>
         <AppBar
@@ -431,7 +413,7 @@ const Dashboard = () => {
         </Typography>
         <Typography variant="h5">
           <Box fontWeight="fontWeightBold">
-            Welcome, {data.firstname}
+            {/* Welcome, {data.firstname} */}
           </Box>
         </Typography>
         <Typography variant="subtitle1" color="textSecondary" gutterBottom>
@@ -482,7 +464,6 @@ const Dashboard = () => {
         {/* ALERT COLUMN
         <Alerts /> */}
       </main>
->>>>>>> e356c1cb4bf9ee30ac6200b76a0664a6d86aa940
     </div>
   );
 };
