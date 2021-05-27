@@ -1,14 +1,26 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./context/Auth.context"; 
 
-const StationsTable = () => {
+
+const StationsTable = (props) => {
   const { user, setUser } = useContext(AuthContext);
-  const [stations, setStations] = useState({ data: [] });
+  const [stations, setStations] = useState({});
 
   // Write useEffect to call getFavorites on page load
+  // useEffect( () => {
+    
+  //   let data: any = stations;
+  //   console.log("data.data in the useEffecthook is: ", data.data);
+  //   stationRowCreator(data);
+
+  //   // stationsTable();
+  // }, []);
+  
   useEffect( () => {
-    getStations();
-  });
+    // console.log('this is user in stationstable.tsx', user);
+    // console.log('stations in useeffect', stations)
+    getStations()
+  }, []);
 
   // Function that creates a timestamp when called
   const lastUpdated = () => {
@@ -17,51 +29,61 @@ const StationsTable = () => {
   };
 
   const getStations = () => {
-    // Iterate through the JSON object from the DB
     // Retrieve the required data
-    fetch(`/stations`, {
+    fetch(`/api/stations`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("stations", stations);
-        setStations(data);
+        // console.log('res.locals after getstations is', data );
+        setStations({...stations, data})
+        // console.log("stations", stations);
       });
 
-    lastUpdated(); // to store the time of this fetch req
-    stationRowCreator();
+    // to store the time of this fetch req  
+    lastUpdated(); 
   };
 
 
   const favStation = (e) => {
     // Send a PUT req to server to add specified Station to Favorites Table
-    fetch(`/user/addFav}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(e.target.value)
+    fetch(`/api/addFavStation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        'station_id': e.target.value,
+      })
+    }).then( data => {
+      props.setFavorites(data);
     })
   }
 
   const trFromDB = []; // necessary to keep in global scope
-  const stationRowCreator = () => {
-
-    for (const station of stations.data) {
-      const tr = (
-        <tr id={station.name}>
-          <td>{station.station_status}</td>
-          <td>{station.name}</td>
-          <td>{station.num_available_bikes}</td>
-          <td>{station.num_available_ebikes}</td>
-          <td>{station.stationName}</td>
-          <td>{lastUpdated}</td>
-          <td><button id={station.name} onClick={favStation}>Favorite</button></td>
-        </tr>
-      );
-      trFromDB.push(tr);
+  const stationRowCreator = async (stations) => {
+    // console.log('this is stations in row creator', stations.data)
+    if (Array.isArray(stations.data)) {
+      // console.log(stations.data.length)
+      for (let i = 0; i < stations.data.length; i++) {
+        trFromDB.push(
+          <tr id={stations.data[i].station_id}>
+            <td>{stations.data[i].station_status}</td>
+            <td>{stations.data[i].name}</td>
+            <td>{stations.data[i].num_available_bikes}</td>
+            <td>{stations.data[i].num_available_ebikes}</td>
+            <td>{lastUpdated()}</td>
+            <td><button id={stations.data[i].station_id} value={stations.data[i].station_id} onClick={favStation}>Favorite</button></td>
+          </tr>
+        );
+        // trFromDB.push(tr);
+       
+      }
+      // console.log('this is tr from db', trFromDB);
+      return trFromDB;      
     }
-    return trFromDB;
   };
+
+  stationRowCreator(stations);
 
   return (
     <div>
